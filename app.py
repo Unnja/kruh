@@ -53,9 +53,9 @@ st.pyplot(fig)
 # Info o autorovi
 # -----------------------
 with st.expander("O autorovi"):
-    st.write("Jméno: Jan Novák")
-    st.write("Kontakt: jan.novak@univerzita.cz")
-    st.write("Použité technologie: Python, Streamlit, Matplotlib")
+    st.write("Jméno: Filip Vaja")
+    st.write("Kontakt: filip.vaja@vut.cz")
+    st.write("Použité technologie: Python, Streamlit, GoogleColab, Matplotlib")
 
 # -----------------------
 # Funkce pro export PDF
@@ -71,8 +71,8 @@ def save_pdf(x0, y0, r, n, color, fig):
     c.setFont("DejaVu", 12)  # české znaky
     
     # Parametry úlohy
-    c.drawString(50, height-50, "Autor: Jan Novák")
-    c.drawString(50, height-70, "Kontakt: jan.novak@univerzita.cz")
+    c.drawString(50, height-50, "Autor: Filip Vaja")
+    c.drawString(50, height-70, "Kontakt: filip.vaja@vut.cz")
     c.drawString(50, height-90, f"Střed: ({x0}, {y0})")
     c.drawString(50, height-110, f"Poloměr: {r}")
     c.drawString(50, height-130, f"Počet bodů: {n}")
