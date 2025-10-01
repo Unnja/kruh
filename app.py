@@ -33,3 +33,47 @@ with st.expander("O autorovi"):
     st.write("Jméno: Filip Vaja")
     st.write("Kontakt: filip.vaja@vut.cz")
     st.write("Použité technologie: Python, Streamlit, GoogleColab")
+
+from io import BytesIO
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
+import matplotlib.pyplot as plt
+
+# Funkce pro uložení grafu do PDF
+def save_pdf(x0, y0, r, n, color, fig):
+    buffer = BytesIO()
+    
+    # nejdříve uložíme matplotlib figuru jako obrázek
+    img_buffer = BytesIO()
+    fig.savefig(img_buffer, format='PNG')
+    img_buffer.seek(0)
+    
+    # vytvoření PDF
+    c = canvas.Canvas(buffer, pagesize=A4)
+    width, height = A4
+    c.setFont("Helvetica", 12)
+    
+    # Parametry úlohy
+    c.drawString(50, height-50, f"Autor: Jan Novák")
+    c.drawString(50, height-70, f"Kontakt: jan.novak@univerzita.cz")
+    c.drawString(50, height-90, f"Střed: ({x0}, {y0})")
+    c.drawString(50, height-110, f"Poloměr: {r}")
+    c.drawString(50, height-130, f"Počet bodů: {n}")
+    c.drawString(50, height-150, f"Barva bodů: {color}")
+    
+    # Vložíme obrázek grafu
+    c.drawImage(img_buffer, 50, height-450, width=500, height=300)  
+    c.showPage()
+    c.save()
+    
+    buffer.seek(0)
+    return buffer
+
+# Tlačítko pro stažení PDF
+pdf_buffer = save_pdf(x0, y0, r, n, color, fig)
+st.download_button(
+    label="Stáhnout PDF",
+    data=pdf_buffer,
+    file_name="kruh.pdf",
+    mime="application/pdf"
+)
