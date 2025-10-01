@@ -34,21 +34,18 @@ with st.expander("O autorovi"):
     st.write("Kontakt: filip.vaja@vut.cz")
     st.write("Použité technologie: Python, Streamlit, GoogleColab")
 
-from io import BytesIO
-from reportlab.lib.pagesizes import A4
-from reportlab.pdfgen import canvas
-import matplotlib.pyplot as plt
+import tempfile
 
-# Funkce pro uložení grafu do PDF
 def save_pdf(x0, y0, r, n, color, fig):
+    # vytvoření dočasného PNG souboru
+    tmpfile = tempfile.NamedTemporaryFile(suffix=".png", delete=False)
+    fig.savefig(tmpfile.name, format='PNG')
+    
+    from reportlab.lib.pagesizes import A4
+    from reportlab.pdfgen import canvas
+    from reportlab.lib.utils import ImageReader
+    
     buffer = BytesIO()
-    
-    # nejdříve uložíme matplotlib figuru jako obrázek
-    img_buffer = BytesIO()
-    fig.savefig(img_buffer, format='PNG')
-    img_buffer.seek(0)
-    
-    # vytvoření PDF
     c = canvas.Canvas(buffer, pagesize=A4)
     width, height = A4
     c.setFont("Helvetica", 12)
@@ -61,19 +58,12 @@ def save_pdf(x0, y0, r, n, color, fig):
     c.drawString(50, height-130, f"Počet bodů: {n}")
     c.drawString(50, height-150, f"Barva bodů: {color}")
     
-    # Vložíme obrázek grafu
-    c.drawImage(img_buffer, 50, height-450, width=500, height=300)  
+    # vložení obrázku z dočasného souboru
+    img = ImageReader(tmpfile.name)
+    c.drawImage(img, 50, height-450, width=500, height=300)
+    
     c.showPage()
     c.save()
-    
     buffer.seek(0)
     return buffer
 
-# Tlačítko pro stažení PDF
-pdf_buffer = save_pdf(x0, y0, r, n, color, fig)
-st.download_button(
-    label="Stáhnout PDF",
-    data=pdf_buffer,
-    file_name="kruh.pdf",
-    mime="application/pdf"
-)
