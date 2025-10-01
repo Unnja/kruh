@@ -8,21 +8,11 @@ from reportlab.lib.utils import ImageReader
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 import tempfile
-import os
-import requests
 
 # -----------------------
-# Stažení fontu s podporou češtiny (LiberationSans)
+# Registrace lokálního fontu pro PDF
 # -----------------------
-font_url = "https://github.com/liberationfonts/liberation-fonts/raw/master/ttf/LiberationSans-Regular.ttf"
-font_path = "LiberationSans-Regular.ttf"
-
-if not os.path.exists(font_path):
-    r = requests.get(font_url)
-    with open(font_path, "wb") as f:
-        f.write(r.content)
-
-pdfmetrics.registerFont(TTFont("LiberationSans", font_path))
+pdfmetrics.registerFont(TTFont("DejaVu", "DejaVuSans.ttf"))  # soubor musí být v repozitáři
 
 # -----------------------
 # Nadpis
@@ -78,7 +68,7 @@ def save_pdf(x0, y0, r, n, color, fig):
     buffer = BytesIO()
     c = canvas.Canvas(buffer, pagesize=A4)
     width, height = A4
-    c.setFont("LiberationSans", 12)  # české znaky
+    c.setFont("DejaVu", 12)  # české znaky
     
     # Parametry úlohy
     c.drawString(50, height-50, "Autor: Jan Novák")
