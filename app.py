@@ -64,8 +64,8 @@ def save_pdf(x0, y0, r, n, color, fig):
     c.setFont("Helvetica", 12)
     
     # Parametry úlohy
-    c.drawString(50, height-50, f"Autor: Jan Novák")
-    c.drawString(50, height-70, f"Kontakt: jan.novak@univerzita.cz")
+    c.drawString(50, height-50, f"Autor: Filip Vaja")
+    c.drawString(50, height-70, f"Kontakt: filip.vaja@vut.cz")
     c.drawString(50, height-90, f"Střed: ({x0}, {y0})")
     c.drawString(50, height-110, f"Poloměr: {r}")
     c.drawString(50, height-130, f"Počet bodů: {n}")
