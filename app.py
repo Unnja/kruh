@@ -1,22 +1,36 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
+from io import BytesIO
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
+from reportlab.lib.utils import ImageReader
+import tempfile
 
+# -----------------------
+# Nadpis
+# -----------------------
 st.title("Body na kružnici")
 
+# -----------------------
 # Vstupy od uživatele
+# -----------------------
 x0 = st.number_input("Střed X:", value=0.0)
 y0 = st.number_input("Střed Y:", value=0.0)
 r = st.number_input("Poloměr:", value=5.0, min_value=0.1)
 n = st.number_input("Počet bodů:", value=8, min_value=1)
 color = st.color_picker("Barva bodů", "#ff0000")
 
+# -----------------------
 # Výpočet bodů
+# -----------------------
 angles = np.linspace(0, 2*np.pi, int(n), endpoint=False)
 x = x0 + r*np.cos(angles)
 y = y0 + r*np.sin(angles)
 
+# -----------------------
 # Vykreslení
+# -----------------------
 fig, ax = plt.subplots()
 ax.set_aspect("equal")
 ax.plot(x0, y0, "bo", label="Střed")
@@ -28,22 +42,21 @@ ax.set_ylabel("y [m]")
 ax.legend()
 st.pyplot(fig)
 
+# -----------------------
 # Info o autorovi
+# -----------------------
 with st.expander("O autorovi"):
     st.write("Jméno: Filip Vaja")
     st.write("Kontakt: filip.vaja@vut.cz")
-    st.write("Použité technologie: Python, Streamlit, GoogleColab")
+    st.write("Použité technologie: Python, Streamlit, GoogleColab, Matplotlib")
 
-import tempfile
-
+# -----------------------
+# Funkce pro export PDF
+# -----------------------
 def save_pdf(x0, y0, r, n, color, fig):
     # vytvoření dočasného PNG souboru
     tmpfile = tempfile.NamedTemporaryFile(suffix=".png", delete=False)
     fig.savefig(tmpfile.name, format='PNG')
-    
-    from reportlab.lib.pagesizes import A4
-    from reportlab.pdfgen import canvas
-    from reportlab.lib.utils import ImageReader
     
     buffer = BytesIO()
     c = canvas.Canvas(buffer, pagesize=A4)
@@ -67,3 +80,13 @@ def save_pdf(x0, y0, r, n, color, fig):
     buffer.seek(0)
     return buffer
 
+# -----------------------
+# Tlačítko pro stažení PDF
+# -----------------------
+pdf_buffer = save_pdf(x0, y0, r, n, color, fig)
+st.download_button(
+    label="Stáhnout PDF",
+    data=pdf_buffer,
+    file_name="kruh.pdf",
+    mime="application/pdf"
+)
