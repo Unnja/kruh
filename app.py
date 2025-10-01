@@ -30,6 +30,6 @@ st.pyplot(fig)
 
 # Info o autorovi
 with st.expander("O autorovi"):
-    st.write("Jméno: Jan Novák")
-    st.write("Kontakt: jan.novak@univerzita.cz")
-    st.write("Použité technologie: Python, Streamlit, Matplotlib")
+    st.write("Jméno: Filip Vaja")
+    st.write("Kontakt: filip.vaja@vut.cz")
+    st.write("Použité technologie: Python, Streamlit, GoogleColab")
